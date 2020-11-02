@@ -14,6 +14,9 @@ class PlaylistView : public QWidget
 public:
     explicit PlaylistView(QWidget *parent = nullptr);
     ~PlaylistView();
+    void addMessage(const QString &text, const QPixmap &pixmap,
+                             const QDateTime &dateTime);
+    void clearAll();
 
 private:
     Ui::PlaylistView *ui;

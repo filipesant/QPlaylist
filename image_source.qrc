@@ -2,5 +2,6 @@
     <qresource prefix="/">
         <file>img/add_icon.png</file>
         <file>img/search_icon.png</file>
+        <file>img/not-found_icon.png</file>
     </qresource>
 </RCC>

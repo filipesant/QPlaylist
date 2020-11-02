@@ -30,6 +30,7 @@ SOURCES += \
     playercontrols.cpp \
     playlist.cpp \
     playlistview.cpp \
+    playlistdelegate.cpp \
     searchview.cpp \
     sidemenu.cpp \
     song.cpp
@@ -42,6 +43,7 @@ HEADERS += \
     playercontrols.h \
     playlist.h \
     playlistview.h \
+    playlistdelegate.h \
     searchview.h \
     sidemenu.h \
     song.h
