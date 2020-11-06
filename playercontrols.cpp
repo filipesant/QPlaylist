@@ -1,5 +1,6 @@
 #include <QStyle>
 #include <QDebug>
+#include <QHoverEvent>
 #include "playercontrols.h"
 #include "ui_playercontrols.h"
 
@@ -13,6 +14,8 @@ PlayerControls::PlayerControls(QWidget *parent) :
     ui->pushButtonNext->setIcon(style()->standardIcon(QStyle::SP_MediaSkipForward));
     ui->pushButtonBack->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
     ui->pushButtonVolume->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
+
+    ui->pushButtonVolume->setAttribute(Qt::WA_Hover);
 
     connect(ui->pushButtonPlay, &QAbstractButton::clicked, this, &PlayerControls::playClicked);
     connect(ui->pushButtonVolume, &QAbstractButton::clicked, this, &PlayerControls::muteClicked);
@@ -88,8 +91,8 @@ void PlayerControls::setMuted(bool muted)
         playerMuted = muted;
 
         ui->pushButtonVolume->setIcon(style()->standardIcon(muted
-                ? QStyle::SP_MediaVolumeMuted
-                : QStyle::SP_MediaVolume));
+                                                            ? QStyle::SP_MediaVolumeMuted
+                                                            : QStyle::SP_MediaVolume));
     }
 }
 

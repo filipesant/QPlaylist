@@ -1,9 +1,11 @@
 #include <QWidget>
 #include <QDebug>
 #include <QObject>
+#include <QAction>
 #include "playercontroller.h"
+#include "dialogcredentials.h"
 
-PlayerController::PlayerController(QWidget *parent)
+PlayerController::PlayerController(QWidget *parent) : parent(parent)
 {
     m_layout = new Layout(parent);
     m_sideMenu = new SideMenu();
@@ -19,6 +21,9 @@ PlayerController::PlayerController(QWidget *parent)
     m_stackedWidget->addWidget(m_playListView);
     m_layout->AddMainContent(m_stackedWidget);
 
+    QAction *credentialsAction = parent->findChild<QAction *>("credentialsAction");
+
+    QObject::connect(credentialsAction, &QAction::triggered, this, &PlayerController::credentialsDialog);
     QObject::connect(m_sideMenu, &SideMenu::SearchSong, this, &PlayerController::searchView);
     QObject::connect(m_sideMenu, &SideMenu::ShowPlaylists, this, &PlayerController::playlistView);
 }
@@ -46,4 +51,12 @@ void PlayerController::searchView()
 void PlayerController::playlistView()
 {
    m_stackedWidget->setCurrentWidget(m_playListView);
+}
+
+void PlayerController::credentialsDialog()
+{
+    DialogCredentials *dlg = new DialogCredentials(parent);
+//    SetupDialog *dlg = new SetupDialog(parent);
+    dlg->exec();
+    delete dlg;
 }

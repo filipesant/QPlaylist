@@ -83,6 +83,13 @@
      </property>
     </widget>
    </item>
+   <item row="3" column="0">
+    <widget class="QListView" name="listViewPlaylusts">
+     <property name="autoFillBackground">
+      <bool>false</bool>
+     </property>
+    </widget>
+   </item>
    <item row="0" column="0">
     <widget class="QPushButton" name="pushButtonSearch">
      <property name="minimumSize">
@@ -111,13 +118,6 @@
       </size>
      </property>
      <property name="flat">
-      <bool>false</bool>
-     </property>
-    </widget>
-   </item>
-   <item row="3" column="0">
-    <widget class="QListView" name="listViewPlaylusts">
-     <property name="autoFillBackground">
       <bool>false</bool>
      </property>
     </widget>

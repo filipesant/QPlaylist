@@ -2,6 +2,7 @@
 #define SIDEMENU_H
 
 #include <QWidget>
+#include "spotifycredentials.h"
 
 namespace Ui {
 class SideMenu;
@@ -17,6 +18,7 @@ public:
 
 private:
     Ui::SideMenu *ui;
+    SpotifyCredentials *credentials;
 
 private slots:
     void CreatePlayListClicked();

@@ -3,13 +3,15 @@
 #include <QDialog>
 #include <QMessageBox>
 #include <QPropertyAnimation>
-#include "createplaylist.h"
+#include "dialogcreateplaylist.h"
 
 SideMenu::SideMenu(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SideMenu)
 {
     ui->setupUi(this);
+    credentials = new SpotifyCredentials();
+
     connect(ui->pushButtonCreatePlaylist, &QAbstractButton::clicked, this, &SideMenu::CreatePlayListClicked);
     connect(ui->pushButtonSearch, &QAbstractButton::clicked, this, &SideMenu::SearchSongClicked);
 }
@@ -22,8 +24,8 @@ SideMenu::~SideMenu()
 void SideMenu::CreatePlayListClicked()
 {
     DialogCreatePlayList *dlg = new DialogCreatePlayList(this);
-    dlg->setModal(true);
     dlg->exec();
+    delete dlg;
 
     emit ShowPlaylists();
 }

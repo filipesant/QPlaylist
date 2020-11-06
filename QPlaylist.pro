@@ -22,7 +22,8 @@ CONFIG += c++11
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
-    createplaylist.cpp \
+    dialogcreateplaylist.cpp \
+    dialogcredentials.cpp \
     layout.cpp \
     main.cpp \
     mainwindow.cpp \
@@ -33,10 +34,13 @@ SOURCES += \
     playlistdelegate.cpp \
     searchview.cpp \
     sidemenu.cpp \
-    song.cpp
+    song.cpp \
+    spotifycredentials.cpp \
+    spotifyrequests.cpp
 
 HEADERS += \
-    createplaylist.h \
+    dialogcreateplaylist.h \
+    dialogcredentials.h \
     layout.h \
     mainwindow.h \
     playercontroller.h \
@@ -46,10 +50,13 @@ HEADERS += \
     playlistdelegate.h \
     searchview.h \
     sidemenu.h \
-    song.h
+    song.h \
+    spotifycredentials.h \
+    spotifyrequests.h
 
 FORMS += \
-    createplaylist.ui \
+    dialogcreateplaylist.ui \
+    dialogcredentials.ui \
     mainwindow.ui \
     playercontrols.ui \
     playlistview.ui \

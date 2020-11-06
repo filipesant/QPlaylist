@@ -11,12 +11,40 @@
    </rect>
   </property>
   <property name="windowTitle">
-   <string>MainWindow</string>
+   <string>QPlaylist</string>
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout"/>
   </widget>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>640</width>
+     <height>22</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuConfig">
+    <property name="title">
+     <string>Configuration</string>
+    </property>
+    <addaction name="credentialsAction"/>
+   </widget>
+   <addaction name="menuConfig"/>
+  </widget>
+  <action name="credentialsAction">
+   <property name="icon">
+    <iconset resource="image_source.qrc">
+     <normaloff>:/img/config_icon.png</normaloff>:/img/config_icon.png</iconset>
+   </property>
+   <property name="text">
+    <string>Credentials</string>
+   </property>
+  </action>
  </widget>
- <resources/>
+ <resources>
+  <include location="image_source.qrc"/>
+ </resources>
  <connections/>
 </ui>

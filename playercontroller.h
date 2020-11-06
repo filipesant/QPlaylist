@@ -18,9 +18,13 @@ public:
     QWidget* layout();
     void searchView();
     void playlistView();
+    void credentialsDialog();
     ~PlayerController();
 
+
+
 private:
+    QWidget *parent = nullptr;
     Layout *m_layout;
     QStackedWidget *m_stackedWidget;
     PlaylistView *m_playListView;
