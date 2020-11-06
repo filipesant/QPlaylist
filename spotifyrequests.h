@@ -11,17 +11,26 @@
 #include <QSettings>
 #include <QString>
 #include <QtNetwork>
+#include "song.h"
+#include "spotifycredentials.h"
 
 class SpotifyRequests : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit SpotifyRequests(QObject *parent = nullptr);
+    explicit SpotifyRequests(SpotifyCredentials *credentials,QObject *parent = nullptr);
 
     QJsonObject getAsObject(const QString &url);
     QJsonArray getAsArray(const QString &url);
+    QVector<Song>  search(const QString &query);
+    QVector<Song>  tracks(const QString &query);
+    QByteArray getImage(const QString &url);
 
+    QString addToQueue(const QString &uri);
+    QString playTracks(int trackIndex, const QString &context);
+    QString playTracks(int trackIndex, const QStringList &all);
+    QString playTracks(const QString &context);
     QString pause();
     QString resume();
     QString seek(int position);
@@ -39,8 +48,10 @@ private:
     QString clientId;
     QString clientSecret;
 
+    SpotifyCredentials *credentials;
     QNetworkRequest request(const QString &url);
     QJsonDocument get(const QString &url);
+
     QString put(const QString &url, QVariantMap *body = nullptr);
     QString post(const QString &url);
     QString del(const QString &url, const QJsonDocument &json);

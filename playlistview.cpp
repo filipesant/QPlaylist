@@ -10,6 +10,9 @@ PlaylistView::PlaylistView(QWidget *parent) :
 {
     ui->setupUi(this);
 
+    credentials = new SpotifyCredentials();
+    spotify = new SpotifyRequests(credentials);
+
     PlaylistDelegate *delegate = new PlaylistDelegate(ui->listViewPlaylist);
     delegate->setContentsMargins(8, 8, 8, 8);
     delegate->setIconSize(32, 32);
@@ -19,9 +22,10 @@ PlaylistView::PlaylistView(QWidget *parent) :
     ui->listViewPlaylist->setModel(new QStandardItemModel(this));
     ui->listViewPlaylist->setItemDelegate(delegate);
 
-    addMessage(tr("This is some text of an info message"),
-               QPixmap(":img/not-found_icon.png"),
-               QDateTime::currentDateTime());
+    ui->listViewPlaylist->setContextMenuPolicy(Qt::ContextMenuPolicy::CustomContextMenu);
+    QLabel::connect(ui->listViewPlaylist, &QWidget::customContextMenuRequested, this, &PlaylistView::popUpMenu);
+    QObject::connect(ui->listViewPlaylist, &QListView::clicked, this, &PlaylistView::PlaylistClicked);
+
 }
 
 PlaylistView::~PlaylistView()
@@ -29,7 +33,7 @@ PlaylistView::~PlaylistView()
     delete ui;
 }
 
-void PlaylistView::addMessage(const QString &text, const QPixmap &pixmap,
+void PlaylistView::addSongs(const QString &text, const QPixmap &pixmap,
                               const QDateTime &dateTime)
 {
     auto *item = new QStandardItem(QIcon(pixmap), text);
@@ -44,6 +48,48 @@ void PlaylistView::addMessage(const QString &text, const QPixmap &pixmap,
 void PlaylistView::clearAll()
 {
     static_cast<QStandardItemModel *>(ui->listViewPlaylist->model())->clear();
+}
+
+void PlaylistView::setPlaylist(Playlist playlist)
+{
+    QString query;
+    m_playlistId = playlist.id();
+    foreach (Song song, playlist.songs())
+    {
+       query.append(song.id).append(",");
+    };
+
+    int index = query.lastIndexOf(QChar(','));
+    QVector<Song> result = spotify->tracks(query.left(index));
+
+    clearAll();
+
+    for (Song &track : result)
+    {
+        QPixmap img;
+        img.loadFromData(spotify->getImage(track.image), "jpeg");
+        auto *item = new QStandardItem(img, track.name);
+        item->setFlags(Qt::ItemIsEnabled | Qt::ItemIsSelectable);
+        item->setData(track.artist, Qt::UserRole);
+        item->setData(track.id, Qt::AccessibleDescriptionRole);
+        static_cast<QStandardItemModel *>(ui->listViewPlaylist->model())->appendRow(item);
+    }
+
+    ui->labelPlaylistName->setText(playlist.name());
+}
+
+void PlaylistView::popUpMenu(const QPoint &pos)
+{
+    QString songId = QString();
+    if(ui->listViewPlaylist->currentIndex().isValid())
+        songId = ui->listViewPlaylist->currentIndex().model()->data(ui->listViewPlaylist->currentIndex(),Qt::AccessibleDescriptionRole).toString();
+    if(ui->listViewPlaylist->model()->rowCount() > 0)
+        (new SongMenu(m_playlistId,songId,true,false,this))->popup(ui->listViewPlaylist->mapToGlobal(pos));
+}
+
+void PlaylistView::PlaylistClicked()
+{
+    emit PlaylistSelected(m_playlistId);
 }
 
 

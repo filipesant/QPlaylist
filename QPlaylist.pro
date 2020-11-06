@@ -35,6 +35,7 @@ SOURCES += \
     searchview.cpp \
     sidemenu.cpp \
     song.cpp \
+    songmenu.cpp \
     spotifycredentials.cpp \
     spotifyrequests.cpp
 
@@ -51,6 +52,7 @@ HEADERS += \
     searchview.h \
     sidemenu.h \
     song.h \
+    songmenu.h \
     spotifycredentials.h \
     spotifyrequests.h
 

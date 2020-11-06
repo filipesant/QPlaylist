@@ -22,10 +22,17 @@ PlayerController::PlayerController(QWidget *parent) : parent(parent)
     m_layout->AddMainContent(m_stackedWidget);
 
     QAction *credentialsAction = parent->findChild<QAction *>("credentialsAction");
+    createCacheLocation();
 
     QObject::connect(credentialsAction, &QAction::triggered, this, &PlayerController::credentialsDialog);
     QObject::connect(m_sideMenu, &SideMenu::SearchSong, this, &PlayerController::searchView);
     QObject::connect(m_sideMenu, &SideMenu::ShowPlaylists, this, &PlayerController::playlistView);
+
+    QObject::connect(m_playerControls, &PlayerControls::play, this, &PlayerController::play);
+    QObject::connect(m_playerControls, &PlayerControls::next, this, &PlayerController::play);
+    QObject::connect(m_playerControls, &PlayerControls::previous, this, &PlayerController::play);
+    QObject::connect(m_playerControls, &PlayerControls::changeVolume, this, &PlayerController::play);
+
 }
 
 PlayerController::~PlayerController()
@@ -48,15 +55,36 @@ void PlayerController::searchView()
    m_stackedWidget->setCurrentWidget(m_searchView);
 }
 
-void PlayerController::playlistView()
+void PlayerController::playlistView(QJsonObject playlistJson)
 {
-   m_stackedWidget->setCurrentWidget(m_playListView);
+    Playlist playlist = Playlist(playlistJson);
+    m_playListView->setPlaylist(playlist);
+
+    m_stackedWidget->setCurrentWidget(m_playListView);
 }
 
 void PlayerController::credentialsDialog()
 {
     DialogCredentials *dlg = new DialogCredentials(parent);
-//    SetupDialog *dlg = new SetupDialog(parent);
     dlg->exec();
     delete dlg;
+}
+
+QString PlayerController::getCacheLocation()
+{
+    return m_cacheLocation;
+}
+
+void PlayerController::createCacheLocation()
+{
+    m_cacheLocation = QStandardPaths::standardLocations(QStandardPaths::CacheLocation)[0];
+    // Create main cache path and album subdir
+    QDir cacheDir(m_cacheLocation);
+    cacheDir.mkpath(".");
+    cacheDir.mkdir("playlist");
+}
+
+void PlayerController::play()
+{
+    qDebug() << "play";
 }

@@ -18,6 +18,8 @@ PlayerControls::PlayerControls(QWidget *parent) :
     ui->pushButtonVolume->setAttribute(Qt::WA_Hover);
 
     connect(ui->pushButtonPlay, &QAbstractButton::clicked, this, &PlayerControls::playClicked);
+    connect(ui->pushButtonNext, &QAbstractButton::clicked, this, &PlayerControls::nextClicked);
+    connect(ui->pushButtonBack, &QAbstractButton::clicked, this, &PlayerControls::previousClicked);
     connect(ui->pushButtonVolume, &QAbstractButton::clicked, this, &PlayerControls::muteClicked);
     connect(ui->volumeSlider, &QSlider::valueChanged, this, &PlayerControls::onVolumeSliderValueChanged);
 }
@@ -60,6 +62,17 @@ void PlayerControls::playClicked()
         emit pause();
         break;
     }
+}
+
+void PlayerControls::nextClicked()
+{
+    emit next();
+}
+
+
+void PlayerControls::previousClicked()
+{
+    emit previous();
 }
 
 int PlayerControls::volume() const

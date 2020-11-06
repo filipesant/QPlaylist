@@ -2,7 +2,10 @@
 #define SIDEMENU_H
 
 #include <QWidget>
+#include <QStandardItemModel>
 #include "spotifycredentials.h"
+#include "playlist.h"
+#include "songmenu.h"
 
 namespace Ui {
 class SideMenu;
@@ -22,11 +25,14 @@ private:
 
 private slots:
     void CreatePlayListClicked();
+    void PlaylistClicked();
     void SearchSongClicked();
+    void LoadPlaylists();
+    void insertPlaylist(Playlist playlist);
 
 signals:
     void SearchSong();
-    void ShowPlaylists();
+    void ShowPlaylists(QJsonObject playlistJson);
 };
 
 #endif // SIDEMENU_H

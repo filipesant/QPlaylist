@@ -14,6 +14,7 @@ class DialogCreatePlayList : public QDialog
 public:
     explicit DialogCreatePlayList(QWidget *parent = nullptr);
     ~DialogCreatePlayList();
+    QString plalistName();
 
 private:
     Ui::DialogCreatePlayList *ui;

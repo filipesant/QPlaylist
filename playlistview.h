@@ -2,6 +2,9 @@
 #define PLAYLISTVIEW_H
 
 #include <QWidget>
+#include "playlist.h"
+#include "songmenu.h"
+#include "spotifyrequests.h"
 
 namespace Ui {
 class PlaylistView;
@@ -14,12 +17,23 @@ class PlaylistView : public QWidget
 public:
     explicit PlaylistView(QWidget *parent = nullptr);
     ~PlaylistView();
-    void addMessage(const QString &text, const QPixmap &pixmap,
+    void setPlaylist(Playlist playlist);
+    void addSongs(const QString &text, const QPixmap &pixmap,
                              const QDateTime &dateTime);
     void clearAll();
 
+private slots:
+       void popUpMenu(const QPoint &pos);
+       void PlaylistClicked();
+
+signals:
+       void PlaylistSelected(QString playlistId);
+
 private:
     Ui::PlaylistView *ui;
+    SpotifyRequests *spotify;
+    SpotifyCredentials *credentials;
+    QString m_playlistId;
 };
 
 #endif // PLAYLISTVIEW_H

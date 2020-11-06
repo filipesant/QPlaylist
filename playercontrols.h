@@ -40,6 +40,8 @@ private:
 
 private slots:
     void playClicked();
+    void nextClicked();
+    void previousClicked();
     void muteClicked();
     void onVolumeSliderValueChanged();
 };

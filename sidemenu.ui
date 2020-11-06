@@ -84,7 +84,7 @@
     </widget>
    </item>
    <item row="3" column="0">
-    <widget class="QListView" name="listViewPlaylusts">
+    <widget class="QListView" name="listViewPlaylist">
      <property name="autoFillBackground">
       <bool>false</bool>
      </property>

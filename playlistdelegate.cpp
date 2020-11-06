@@ -1,5 +1,6 @@
 #include "playlistdelegate.h"
 #include <QPainter>
+#include <QApplication>
 #include <QFont>
 
 PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent)
@@ -8,7 +9,6 @@ PlaylistDelegate::PlaylistDelegate(QObject *parent) : QStyledItemDelegate(parent
     m_margins = QMargins(0, 0, 0, 0);
     m_spacingHorizontal = 0;
     m_spacingVertical = 0 ;
-
 }
 
 PlaylistDelegate::~PlaylistDelegate()
@@ -58,7 +58,7 @@ void PlaylistDelegate::setVerticalSpacing(int spacing)
 
 
 QRect PlaylistDelegate::songTitleBox(const QStyleOptionViewItem &option,
-                             const QModelIndex &index) const
+                                     const QModelIndex &index) const
 {
     QFont f(option.font);
 
@@ -138,6 +138,21 @@ void PlaylistDelegate::paint(QPainter *painter, const QStyleOptionViewItem &opti
     painter->setFont(opt.font);
     painter->setPen(palette.windowText().color());
     painter->drawText(messageRect, Qt::TextSingleLine, opt.text);
+
+//    QStyleOptionButton button;
+//    QRect r = option.rect;
+//    int x, y, w, h;
+//    x = r.left() + r.width() - 20;
+//    y = r.top() + 10;
+//    w = 15;
+//    h = 30;
+//    button.icon= QIcon(QString::fromUtf8("img/show-more_icon.png"));
+//    button.iconSize = QSize(20,20);
+//    button.rect = QRect(x,y,w,h);
+//    button.text = "";
+//    button.state = QStyle::State_Enabled;
+
+//    QApplication::style()->drawControl( QStyle::CE_PushButton, &button, painter);
 
     painter->restore();
 }

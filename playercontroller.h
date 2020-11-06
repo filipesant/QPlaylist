@@ -17,13 +17,16 @@ public:
     PlayerController(QWidget *parent = nullptr);
     QWidget* layout();
     void searchView();
-    void playlistView();
+    void playlistView(QJsonObject playlistJson);
     void credentialsDialog();
+    QString getCacheLocation();
     ~PlayerController();
 
-
+private slots:
+    void play();
 
 private:
+    void createCacheLocation();
     QWidget *parent = nullptr;
     Layout *m_layout;
     QStackedWidget *m_stackedWidget;
@@ -31,6 +34,7 @@ private:
     SearchView *m_searchView;
     SideMenu *m_sideMenu;
     PlayerControls *m_playerControls;
+    QString m_cacheLocation;
 
 };
 
