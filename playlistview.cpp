@@ -45,6 +45,38 @@ void PlaylistView::addSongs(const QString &text, const QPixmap &pixmap,
     ui->listViewPlaylist->scrollToBottom();
 }
 
+Playlist PlaylistView::getPlaylist()
+{
+    return Playlist(m_playlistId);
+}
+
+Song PlaylistView::getCurrentSong()
+{
+    if(ui->listViewPlaylist->currentIndex().isValid())
+    {
+        QString songId = ui->listViewPlaylist->currentIndex().model()->data(ui->listViewPlaylist->currentIndex(),Qt::AccessibleDescriptionRole).toString();
+        return Song(songId);
+    }
+
+    return Song();
+}
+
+int PlaylistView::getCurrentIndex()
+{
+    if(ui->listViewPlaylist->currentIndex().isValid())
+    {
+        return ui->listViewPlaylist->currentIndex().row();
+    }
+
+    return -1;
+}
+
+void PlaylistView::setCurrentIndex(int index)
+{
+    QModelIndex modelIndex = ui->listViewPlaylist->model()->index(index,0);
+    ui->listViewPlaylist->setCurrentIndex(modelIndex);
+}
+
 void PlaylistView::clearAll()
 {
     static_cast<QStandardItemModel *>(ui->listViewPlaylist->model())->clear();

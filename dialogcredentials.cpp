@@ -61,7 +61,6 @@ void DialogCredentials::Authenticate()
                 return;
             }
 
-            // Do magic with code received
             // GET /?code=<code> HTTP...
             auto left = response.left(response.indexOf(" HTTP"));
             auto code = left.right(left.length() - left.indexOf("?code=") - 6);

@@ -21,7 +21,8 @@ private:
     void remFromPlaylist(bool checked);
     QMenu *addPlaylist;
     QAction *removeFromPlaylist;
-    bool isAdd, isRemove;
+    bool isAdd = false;
+    bool isRemove = false;
     QString songId;
     QString playlistId;
 

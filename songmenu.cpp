@@ -2,15 +2,18 @@
 #include <QDebug>
 
 SongMenu::SongMenu(QString playlistId, QString songId, bool remove, bool add, QWidget *parent) :
-    QMenu(parent), isRemove(remove), isAdd(add), songId(songId), playlistId(playlistId)
+    QMenu(parent),  songId(songId), playlistId(playlistId)
 {
+    isRemove = remove;
+    isAdd =add;
+
     if(isAdd){
         addPlaylist = addMenu(QPixmap("img/add_icon"), "Add to playlist");
         fillPlaylists(addPlaylist);
         QMenu::connect(addPlaylist, &QMenu::triggered, this, &SongMenu::addToPlaylist);
     }
 
-    if(isRemove){
+    if(remove){
         removeFromPlaylist = addAction(QPixmap("img/remove_icon"), "Remove from playlist");
         QAction::connect(removeFromPlaylist, &QAction::triggered, this, &SongMenu::remFromPlaylist);
     }

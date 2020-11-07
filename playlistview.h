@@ -21,6 +21,10 @@ public:
     void addSongs(const QString &text, const QPixmap &pixmap,
                              const QDateTime &dateTime);
     void clearAll();
+    Playlist getPlaylist();
+    Song getCurrentSong();
+    int getCurrentIndex();
+    void setCurrentIndex(int index);
 
 private slots:
        void popUpMenu(const QPoint &pos);

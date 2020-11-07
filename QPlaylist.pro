@@ -37,7 +37,9 @@ SOURCES += \
     song.cpp \
     songmenu.cpp \
     spotifycredentials.cpp \
-    spotifyrequests.cpp
+    spotifydevice.cpp \
+    spotifyrequests.cpp \
+    spotifytimelapse.cpp
 
 HEADERS += \
     dialogcreateplaylist.h \
@@ -54,7 +56,9 @@ HEADERS += \
     song.h \
     songmenu.h \
     spotifycredentials.h \
-    spotifyrequests.h
+    spotifydevice.h \
+    spotifyrequests.h \
+    spotifytimelapse.h
 
 FORMS += \
     dialogcreateplaylist.ui \

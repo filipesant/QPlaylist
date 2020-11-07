@@ -8,7 +8,8 @@ SearchView::SearchView(QWidget *parent) :
     QWidget(parent),
     ui(new Ui::SearchView)
 {
-    ui->setupUi(this);credentials = new SpotifyCredentials();
+    ui->setupUi(this);
+    credentials = new SpotifyCredentials();
     spotify = new SpotifyRequests(credentials);
 
     PlaylistDelegate *delegate = new PlaylistDelegate(ui->listViewSongs);
@@ -51,8 +52,6 @@ void SearchView::doSearch()
 void SearchView::playTest()
 {
     QModelIndex index = ui->listViewSongs->currentIndex();
-    //    static_cast<QStandardItemModel *>(index)->data();
-    qDebug() << index.data().toString();
     spotify->playTracks(index.data().toString());
 }
 
@@ -62,7 +61,6 @@ void SearchView::popUpMenu(const QPoint &pos)
     if(ui->listViewSongs->currentIndex().isValid())
         songId = ui->listViewSongs->currentIndex().data(Qt::AccessibleDescriptionRole).toString();
     (new SongMenu("",songId, false,true,this))->popup(ui->listViewSongs->mapToGlobal(pos));
-    qDebug() << "AQUI";
 }
 
 

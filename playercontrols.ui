@@ -260,6 +260,9 @@
             <height>50</height>
            </size>
           </property>
+          <property name="focusPolicy">
+           <enum>Qt::NoFocus</enum>
+          </property>
           <property name="text">
            <string/>
           </property>
@@ -272,8 +275,11 @@
           <property name="checkable">
            <bool>false</bool>
           </property>
-          <property name="flat">
+          <property name="default">
            <bool>false</bool>
+          </property>
+          <property name="flat">
+           <bool>true</bool>
           </property>
          </widget>
         </item>

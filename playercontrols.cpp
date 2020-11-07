@@ -15,13 +15,13 @@ PlayerControls::PlayerControls(QWidget *parent) :
     ui->pushButtonBack->setIcon(style()->standardIcon(QStyle::SP_MediaSkipBackward));
     ui->pushButtonVolume->setIcon(style()->standardIcon(QStyle::SP_MediaVolume));
 
-    ui->pushButtonVolume->setAttribute(Qt::WA_Hover);
+    ui->volumeSlider->setValue(100);
 
     connect(ui->pushButtonPlay, &QAbstractButton::clicked, this, &PlayerControls::playClicked);
     connect(ui->pushButtonNext, &QAbstractButton::clicked, this, &PlayerControls::nextClicked);
     connect(ui->pushButtonBack, &QAbstractButton::clicked, this, &PlayerControls::previousClicked);
-    connect(ui->pushButtonVolume, &QAbstractButton::clicked, this, &PlayerControls::muteClicked);
-    connect(ui->volumeSlider, &QSlider::valueChanged, this, &PlayerControls::onVolumeSliderValueChanged);
+    connect(ui->volumeSlider, &QSlider::sliderReleased, this, &PlayerControls::onVolumeSliderValueChanged);
+    connect(ui->timeLineSlider, &QSlider::sliderReleased, this, &PlayerControls::onSeek);
 }
 
 PlayerControls::~PlayerControls()
@@ -53,15 +53,11 @@ void PlayerControls::setState(QMediaPlayer::State state)
 
 void PlayerControls::playClicked()
 {
-    switch (playerState) {
-    case QMediaPlayer::StoppedState:
-    case QMediaPlayer::PausedState:
-        emit play();
-        break;
-    case QMediaPlayer::PlayingState:
-        emit pause();
-        break;
-    }
+   if(playerState == QMediaPlayer::StoppedState || playerState == QMediaPlayer::PausedState){
+       emit play();
+   } else {
+       emit pause();
+   }
 }
 
 void PlayerControls::nextClicked()
@@ -75,13 +71,9 @@ void PlayerControls::previousClicked()
     emit previous();
 }
 
-int PlayerControls::volume() const
+void PlayerControls::onSeek()
 {
-    qreal linearVolume =  QAudio::convertVolume(ui->volumeSlider->value() / qreal(100),
-                                                QAudio::LogarithmicVolumeScale,
-                                                QAudio::LinearVolumeScale);
-
-    return qRound(linearVolume * 100);
+    emit seek(ui->timeLineSlider->value());
 }
 
 void PlayerControls::setVolume(int volume)
@@ -116,5 +108,28 @@ void PlayerControls::muteClicked()
 
 void PlayerControls::onVolumeSliderValueChanged()
 {
-    emit changeVolume(volume());
+    emit changeVolume(ui->volumeSlider->value());
+}
+
+void PlayerControls::setCurrentTime(QString value)
+{
+    ui->labelCurrentTime->setText(value);
+}
+void PlayerControls::setFinalTime(QString value)
+{
+    ui->labelTotalTime->setText(value);
+}
+
+void PlayerControls::setValueSlider(int value)
+{
+    ui->timeLineSlider->setValue(value);
+}
+void PlayerControls::setMaximumValueSlider(int value)
+{
+    ui->timeLineSlider->setMaximum(value);
+}
+
+bool PlayerControls::setVolumeBlockSignals(bool value)
+{
+    return ui->volumeSlider->blockSignals(value);
 }

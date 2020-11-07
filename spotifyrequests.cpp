@@ -38,28 +38,15 @@ QString SpotifyRequests::put(const QString &url, QVariantMap *body)
     // Send the request, we don't expect any response
     auto putData = body == nullptr ? nullptr : QJsonDocument::fromVariant(*body).toJson();
     auto reply = errorMessage(networkManager->put(req, putData));
-//    if (reply.contains("No active device found"))
-//    {
-//        auto d = devices();
-//        if (d.length() == 1)
-//        {
-//            setDevice(devices().at(0));
-//            return put(url, body);
-//        }
-//        else if (d.length() > 1)
-//        {
-//            DeviceSelectDialog dialog(d);
-//            if (dialog.exec() == QDialog::Accepted)
-//            {
-//                auto selected = dialog.selectedDevice();
-//                if (!selected.id.isEmpty())
-//                {
-//                    setDevice(selected);
-//                    return put(url, body);
-//                }
-//            }
-//        }
-//    }
+    if (reply.contains("No active device found"))
+    {
+        auto d = devices();
+        if (d.length() == 1)
+        {
+            setDevice(devices().at(0));
+            return put(url, body);
+        }
+    }
     return reply;
 }
 
@@ -138,14 +125,53 @@ bool SpotifyRequests::refresh()
     lastAuth = QDateTime::currentSecsSinceEpoch();
     auto accessToken = json["access_token"].toString();
     this->accessToken = accessToken;
-//        credentials-> accessToken = accessToken;
-//        settings.save();
     return true;
+}
+
+void SpotifyRequests::requestCurrentPlayback()
+{
+    auto context = new QObject();
+    SpotifyRequests::connect(this, &SpotifyRequests::got, context, [this, context](const QJsonDocument &json)
+    {
+        delete context;
+        emit gotPlayback(SpotifyTimelapse(json.object()));
+    });
+    getLater("me/player");
+}
+
+void SpotifyRequests::getLater(const QString &url)
+{
+    // Prepare fetch of request
+    auto context = new QObject();
+    QNetworkAccessManager::connect(networkManager, &QNetworkAccessManager::finished, context,
+        [this, context, url](QNetworkReply *reply)
+        {
+            auto replyUrl = reply->url().toString();
+            if (replyUrl.right(replyUrl.length() - 27) != url)
+                return;
+            delete context;
+            // Parse reply as json
+            auto json = QJsonDocument::fromJson(reply->readAll());
+            reply->deleteLater();
+            emit got(json);
+        });
+
+    networkManager->get(request(url));
 }
 
 bool SpotifyRequests::isValid() const
 {
     return refreshValid;
+}
+
+QString SpotifyRequests::setVolume(int volume)
+{
+    return put(QString("me/player/volume?volume_percent=%1").arg(volume));
+}
+
+QString SpotifyRequests::seek(int position)
+{
+    return put(QString("me/player/seek?position_ms=%1").arg(position));
 }
 
 QJsonDocument SpotifyRequests::get(const QString &url)
@@ -165,6 +191,31 @@ QJsonDocument SpotifyRequests::get(const QString &url)
     return json;
 }
 
+QVector<SpotifyDevice> SpotifyRequests::devices()
+{
+    auto json = getAsObject("me/player/devices");
+    auto items = json["devices"].toArray();
+    QVector<SpotifyDevice> devices(items.size());
+    for (int i = 0; i < items.size(); i++)
+        devices[i] = SpotifyDevice(items.at(i).toObject());
+    return devices;
+}
+
+QString SpotifyRequests::setDevice(const SpotifyDevice &device)
+{
+    QVariantMap body;
+    body["device_ids"] = QStringList({
+        device.id
+    });
+    currentDevice = device.id;
+    return put("me/player", &body);
+}
+
+QString SpotifyRequests::pause()
+{
+    return put("me/player/pause");
+}
+
 QString SpotifyRequests::playTracks(int trackIndex, const QString &context)
 {
     QVariantMap body;
@@ -173,11 +224,11 @@ QString SpotifyRequests::playTracks(int trackIndex, const QString &context)
         QPair<QString, int>("position", trackIndex)
     });
 
-    return put(QString("me/player/play"));
-//    return put(currentDevice == nullptr || currentDevice.isEmpty()
-//        ? QString("me/player/play")
-//        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
+    return put(currentDevice == nullptr || currentDevice.isEmpty()
+        ? QString("me/player/play")
+        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
 }
+
 
 QString SpotifyRequests::playTracks(int trackIndex, const QStringList &all)
 {
@@ -187,20 +238,19 @@ QString SpotifyRequests::playTracks(int trackIndex, const QStringList &all)
         QPair<QString, int>("position", trackIndex)
     });
 
-    return put(QString("me/player/play"));
-//    return put(currentDevice == nullptr || currentDevice.isEmpty()
-//        ? QString("me/player/play")
-//        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
+    return put(currentDevice == nullptr || currentDevice.isEmpty()
+        ? QString("me/player/play")
+        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
 }
 
 QString SpotifyRequests::playTracks(const QString &context)
 {
     QVariantMap body;
     body["context_uri"] = context;
-    return put(QString("me/player/play"));
-//    return put(currentDevice == nullptr
-//        ? QString("me/player/play")
-//        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
+
+    return put(currentDevice == nullptr
+        ? QString("me/player/play")
+        : QString("me/player/play?device_id=%1").arg(currentDevice), &body);
 }
 
 
